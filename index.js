@@ -11,12 +11,14 @@ let countdown = 10;
 let guessed = false;
 
 let startup = true;
+let quit = false;
 let s_block = 0;
 let s_char = 0;
 
+let speed_up = new Audio('speed.wav');
 let wrong = new Audio('wrong.wav');
 let right = new Audio('right.wav');
-let speed_up = new Audio('speed.wav');
+let bgm = new Audio('bgm.wav');
 
 let TEXT = [
     [1, '[BOOT] '], [2, 'Starting drivers'], [50, '...'], [0, '<br>'],
@@ -47,7 +49,6 @@ function doStartup() {
                 $("#game").fadeIn(1000);
                 startup = false;
 
-                let bgm = new Audio('bgm.wav');
                 bgm.addEventListener('ended', function() {
                     this.currentTime = 0;
                     this.play();
@@ -100,10 +101,28 @@ function startGame() {
 
 
 function keyDown(event) {
-    if (startup) return;
+    if (startup || quit) return;
 
-    let key = event.keyCode - 48;
+    let key = (event.keyCode || event.which) - 48;
     if (!started) return startGame();
+
+    let ctrl = event.ctrlKey ? event.ctrlKey : (key === 17);
+
+    if (ctrl && key === 19) {
+        started = false;
+        quit = true;
+        bgm.pause();
+
+        speed_up.volume = right.volume = bgm.volue = wrong.volume = 0;
+
+        $("#game *").css({display: 'none'});
+        $("#game").css({backgroundColor: '#ddd', height: 1, top: '50vh'});
+
+        setTimeout(function() {
+            $("#game").css({width: 0, left: '50vw'});
+        }, 150);
+    }
+
     if (key < 1 || key > 9) return;
     if (guessed) return;
 
@@ -128,6 +147,8 @@ function keyDown(event) {
 
 
 function gameTick() {
+    if (quit) return;
+
     if (!started) {
         // Casino animation
         switch (active) {
