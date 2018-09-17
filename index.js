@@ -14,6 +14,10 @@ let startup = true;
 let s_block = 0;
 let s_char = 0;
 
+let wrong = new Audio('wrong.wav');
+let right = new Audio('right.wav');
+let speed_up = new Audio('speed.wav');
+
 let TEXT = [
     [1, '[BOOT] '], [2, 'Starting drivers'], [50, '...'], [0, '<br>'],
     [1, '[BOOT] '], [2, 'Loading display'], [50, '...'], [0, '<br>'],
@@ -42,9 +46,19 @@ function doStartup() {
             setTimeout(function() {
                 $("#game").fadeIn(1000);
                 startup = false;
+
+                let bgm = new Audio('bgm.wav');
+                bgm.addEventListener('ended', function() {
+                    this.currentTime = 0;
+                    this.play();
+                }, false);
+                bgm.play();
+
                 return setTimeout(gameTick, 0);
             }, 100);
         }, 150);
+
+        return;
     }
     let block = TEXT[s_block];
 
@@ -100,9 +114,15 @@ function keyDown(event) {
         $("#prompt").html("Score: " + Math.round(score) + "<br><br>Press any key to start!").show();
         $("#" + key).addClass("right");
         $("#score").html(Math.round(score));
+
+        right.currentTime = 0;
+        right.play();
     } else {
         $("#" + key).addClass("wrong");
         score -= 150;
+
+        wrong.currentTime = 0;
+        wrong.play();
     }
 }
 
@@ -145,6 +165,10 @@ function gameTick() {
         countdown = 10;
         $("#prompt").text("Speed up").show();
         number--;
+        speed_up.currentTime = 0;
+        speed_up.playbackRate = speed;
+        speed_up.volume = 0.7;
+        speed_up.play();
     } else {
         $("#prompt").hide();
     }
