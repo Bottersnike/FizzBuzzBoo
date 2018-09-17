@@ -10,8 +10,66 @@ let animation_speed = 150;
 let countdown = 10;
 let guessed = false;
 
+let startup = true;
+let s_block = 0;
+let s_char = 0;
+
+let TEXT = [
+    [1, '[BOOT] '], [2, 'Starting drivers'], [50, '...'], [0, '<br>'],
+    [1, '[BOOT] '], [2, 'Loading display'], [50, '...'], [0, '<br>'],
+    [1, '[BOOT] '], [2, 'Loading userspace'], [50, '...'], [0, '<br>'],
+    [1, '[User] '], [2, 'Start interface'], [0, '<br><br>'],
+
+    [1, 'Build Operating System: Unknown'], [0, '<br>'],
+    [1, 'Current Operating System: Unknown'], [0, '<br>'],
+    [1, 'Boot Start Time: ' + (new Date())], [0, '<br>'],
+    [1, 'Boot Host: ' + navigator.appName + ', ' + navigator.appCodeName + ', ' + navigator.platform], [0, '<br>'],
+    [1, 'System renderer: ' + navigator.product], [0, '<br>'],
+    [1, 'User Agent: ' + navigator.userAgent], [0, '<br>'],
+
+    [250, ' '], [0, '<br>'],
+    [0, 'Boot ready'],
+];
+
+
+function doStartup() {
+    if (s_block >= TEXT.length) {
+        $("#startup").css({color: '#ddd', backgroundColor: '#ddd', height: 1, top: '50vh'});
+
+        setTimeout(function() {
+            $("#startup").css({width: 0, left: '50vw'});
+
+            setTimeout(function() {
+                $("#game").fadeIn(1000);
+                startup = false;
+                return setTimeout(gameTick, 0);
+            }, 100);
+        }, 150);
+    }
+    let block = TEXT[s_block];
+
+    let txt = $("#text");
+    if (!block[0]) {
+        txt.html(txt.html() + block[1]);
+        s_block++;
+        s_char = 0;
+
+        setTimeout(doStartup, 100);
+    } else {
+        txt.html(txt.html() + block[1][s_char++]);
+
+        if (s_char >= block[1].length) {
+            s_block++;
+            s_char = 0;
+        }
+
+        setTimeout(doStartup, block[0]);
+    }
+}
 
 function startGame() {
+    if (startup) return;
+
     if (started) return;
     started = true;
     number = Math.round(Math.random() * 25 + 5);
@@ -28,16 +86,18 @@ function startGame() {
 
 
 function keyDown(event) {
+    if (startup) return;
+
     let key = event.keyCode - 48;
-    if (key < 2 || key > 9) return;
-    if (!started) return;
+    if (!started) return startGame();
+    if (key < 1 || key > 9) return;
     if (guessed) return;
 
     guessed = true;
 
     if (key === boo_num) {
         started = false;
-        $("#prompt").html("Score: " + Math.round(score) + "<br><br>Click anywhere to start!").show();
+        $("#prompt").html("Score: " + Math.round(score) + "<br><br>Press any key to start!").show();
         $("#" + key).addClass("right");
         $("#score").html(Math.round(score));
     } else {
@@ -84,12 +144,12 @@ function gameTick() {
         speed += 1 / (speed * 5);
         countdown = 10;
         $("#prompt").text("Speed up").show();
-        number --;
+        number--;
     } else {
         $("#prompt").hide();
     }
 
-    number ++;
+    number++;
 
     if (number % 3 === 0) fizz.addClass("active");
     else fizz.removeClass("active");
@@ -113,14 +173,15 @@ function gameTick() {
     setTimeout(gameTick, 1000 / speed);
 }
 
-$(function() {
+$(function () {
     fizz = $(".fizz");
     buzz = $(".buzz");
     boo = $(".boo");
     num = $("#number");
 
-    setTimeout(gameTick, 0);
+    doStartup();
+    //setTimeout(gameTick, 0);
 
-    $(document).click(startGame);
+    // $(document).click(startGame);
     $(document).keydown(keyDown);
 });

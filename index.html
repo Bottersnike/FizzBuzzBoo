@@ -4,10 +4,18 @@
 <head>
     <title>FizzBuzzBoo</title>
 
+    <link href="https://fonts.googleapis.com/css?family=VT323" rel="stylesheet">
     <link rel="stylesheet" href="index.css">
 </head>
 
 <body>
+<div id="startup" class="scene">
+    <div id="startup-text">
+        <span id="text"></span><span id="cursor">_</span>
+    </div>
+</div>
+
+<div id="game" class="scene">
     <div id="scores">
         <div id="score">1000</div>
         <div id="speed">&times;1</div>
@@ -20,9 +28,10 @@
 
     <div id="number">14</div>
 
-    <div id="prompt">Click anywhere to start!</div>
+    <div id="prompt">Press any key to start!</div>
 
     <div id="nums">
+        <div id="1">1</div>
         <div id="2">2</div>
         <div id="3">3</div>
         <div id="4">4</div>
@@ -32,8 +41,9 @@
         <div id="8">8</div>
         <div id="9">9</div>
     </div>
+</div>
 
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-    <script src="index.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="index.js"></script>
 </body>
 </html>
