@@ -39,6 +39,18 @@ let TEXT = [
 
 
 function doStartup() {
+    $("#startup").css({backgroundColor: "#ddd"});
+
+    $("#text").css({color: "#000", fontSize: "96px"}).html("&copy;4004NaTa13 2018<br>SFX &copy;ATD 2018");
+
+    setTimeout(function() {
+        $("#text").css({color: "", fontSize: ""}).text("");
+        $("#startup").css({backgroundColor: "#000"});
+        animStartup();
+    }, 1500);
+}
+
+function animStartup() {
     if (s_block >= TEXT.length) {
         $("#startup").css({color: '#ddd', backgroundColor: '#ddd', height: 1, top: '50vh'});
 
@@ -69,7 +81,7 @@ function doStartup() {
         s_block++;
         s_char = 0;
 
-        setTimeout(doStartup, 100);
+        setTimeout(animStartup, 100);
     } else {
         txt.html(txt.html() + block[1][s_char++]);
 
@@ -78,7 +90,7 @@ function doStartup() {
             s_char = 0;
         }
 
-        setTimeout(doStartup, block[0]);
+        setTimeout(animStartup, block[0]);
     }
 }
 
@@ -113,7 +125,7 @@ function keyDown(event) {
         quit = true;
         bgm.pause();
 
-        speed_up.volume = right.volume = bgm.volue = wrong.volume = 0;
+        // speed_up.volume = right.volume = bgm.volue = wrong.volume = 0;
 
         $("#game *").css({display: 'none'});
         $("#game").css({backgroundColor: '#ddd', height: 1, top: '50vh'});
