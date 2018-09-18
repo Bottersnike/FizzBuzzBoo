@@ -39,7 +39,7 @@ let TEXT = [
 
 
 function doStartup() {
-    $("#startup").css({backgroundColor: "#eee"});
+    $("#startup").hide().css({backgroundColor: "#eee"}).fadeIn(35);
 
     $("#text").css({color: "#000", fontSize: "96px"}).html("&copy;4004NaTa13 2018<br>SFX &copy;ATD 2018");
 
