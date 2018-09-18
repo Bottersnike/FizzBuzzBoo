@@ -39,7 +39,7 @@ let TEXT = [
 
 
 function doStartup() {
-    $("#startup").css({backgroundColor: "#ddd"});
+    $("#startup").css({backgroundColor: "#eee"});
 
     $("#text").css({color: "#000", fontSize: "96px"}).html("&copy;4004NaTa13 2018<br>SFX &copy;ATD 2018");
 
@@ -47,7 +47,7 @@ function doStartup() {
         $("#text").css({color: "", fontSize: ""}).text("");
         $("#startup").css({backgroundColor: "#000"});
         animStartup();
-    }, 1500);
+    }, 750);
 }
 
 function animStartup() {
